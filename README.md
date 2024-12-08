@@ -32,7 +32,7 @@ cross-env BUILD_TARGET=client vite build
 npm install
 ```
 
-### Запуск приложени в режиме Hot-Reload для разработки
+### Запуск приложения в режиме Hot-Reload для разработки
 
 ```sh
 npm run dev

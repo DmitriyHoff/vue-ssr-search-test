@@ -6,7 +6,11 @@ import { useTemplateRef } from 'vue';
 import { useSearchStore } from '@/stores/search';
 import { storeToRefs } from 'pinia';
 
+/** URL, на который будут отправляться запросы */
 const SEARCH_API_URL: string = import.meta.env.VITE_SEARCH_API_URL;
+
+/** Задержка для отправки запроса после нажатия кнопки */
+const KEYUP_TIMEOUT = 200;
 
 const searchStore = useSearchStore()
 const { searchResults } = storeToRefs(searchStore)
@@ -15,14 +19,17 @@ const instanceAxios: AxiosInstance = axios.create({
     baseURL: SEARCH_API_URL,
     timeout: 10_000,
     headers: {
-        'Access-Control-Allow-Origin': '*',
+        // 'Access-Control-Allow-Origin': '*',
     }
 });
 
-let active: boolean = false;
+/** Идентификатор таймера, который должен выполнить поисковый запрос */
+let timeout: NodeJS.Timeout
 
+/** Ссылка на тектовое поля */
 const inputQuery = useTemplateRef('inputQuery')
 
+/** Формат данных, кторые должен вернуть сервер */
 enum OutputFormat {
     XML = 'xml',
     JSON = 'json',
@@ -31,23 +38,29 @@ enum OutputFormat {
     GeoCodeJSON = 'geocodejson',
 }
 
+/**
+ * Выполняет поисковый запрос и возвращает полученные результаты
+ * @param query Строка поискового запроса
+ * @param format Формат возвращаемых данных
+ */
 async function search(query: string, format: OutputFormat = OutputFormat.JSON) {
     const { data } = await instanceAxios.get('search', { params: { q: query, format, 'accept-language': 'ru' } });
-    console.log({ data })
     return data;
 }
 
+/** Обработчик сбытия `onKeyUp` */
 async function onKeyUpHadler() {
-    if (active) return
+    // если предыдущий таймаут ещё не выполнился ...
+    clearTimeout(timeout)
 
-    setTimeout(async () => {
-        active = true;
+    // сохраняем `id` таймера и устанавливаем новый таймаут,
+    // который выполнит поисковый запрос
+    timeout = setTimeout(async () => {
         const query = inputQuery.value?.value;
         if (query) {
             searchResults.value = await search(inputQuery.value?.value)
         }
-        active = false;
-    }, 300)
+    }, KEYUP_TIMEOUT)
 }
 
 

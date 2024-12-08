@@ -1,40 +1,45 @@
 # vue-ssr-search-test
 
-This template should help get you started developing with Vue 3 in Vite.
+Поиск локаций с использованием Nominatim API.
 
-## Recommended IDE Setup
+## Краткое описание реализации
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+В данном проекте серверный рендеринг (**SSR**) реализован с использованием **Node** + **Express.js**, без сторонних библиотек.
 
-## Type Support for `.vue` Imports in TS
+Для демонстрации корректной работы серверного рендеринга и процесса гидратации на клиентской стороне добавлено несколько страниц c помощью **Vue Router**.
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+Для управления состоянием приложения используется **Pinia**
 
-## Customize configuration
+Для визуализации результатов поиска было решено подключить библиотеку **Leaflet**.
+Поскольку Leaflet функционирует исключительно в браузере, обеспечен динамический импорт данной библиотеки в хуке `onMounted()` Vue. Это решение гарантирует, что библиотека будет загружена только на клиентской стороне, избегая ошибок, связанных с отсутствием глобального объекта `window` на сервере.
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+Скрипты сборки принимают параметры окружения, которые в OS Windows и Linux передаются как:
 
-## Project Setup
+```
+set NODE_ENV=production && vite build // Windows
+NODE_ENV=production && vite build // Linux
+```
+
+Для решения вопроса кросс-платформенности используется библиотека **cross-env**:
+
+```
+cross-env BUILD_TARGET=client vite build
+```
+
+## Подготовка проекта
 
 ```sh
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+### Запуск приложени в режиме Hot-Reload для разработки
 
 ```sh
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+### Сборка готового решения
 
 ```sh
 npm run build
 ```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
-# vue-ssr-search-test

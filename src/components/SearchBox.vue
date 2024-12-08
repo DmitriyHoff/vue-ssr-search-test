@@ -13,7 +13,7 @@ const SEARCH_API_URL: string = import.meta.env.VITE_SEARCH_API_URL;
 const KEYUP_TIMEOUT = 200;
 
 const searchStore = useSearchStore()
-const { searchResults } = storeToRefs(searchStore)
+const { searchResults, selectedResult } = storeToRefs(searchStore)
 
 const instanceAxios: AxiosInstance = axios.create({
     baseURL: SEARCH_API_URL,
@@ -75,7 +75,8 @@ async function onKeyUpHadler() {
 
         <ul class="search-results">
             <li v-for="result in searchResults" class="search-results__item" :key="result.osm_id">
-                <SearchResult :result-object="result" @click="() => searchStore.setAsSelected(result)" />
+                <SearchResult :result-object="result" :active="result === selectedResult"
+                    @click="() => searchStore.setAsSelected(result)" />
             </li>
         </ul>
     </div>
@@ -90,8 +91,23 @@ async function onKeyUpHadler() {
 
     &__input {
         display: flex;
+        padding: 0.5rem;
         flex-direction: column;
-        background-color: aquamarine;
+        border-radius: 0.5rem;
+        border: 1px solid var(--color-border);
+        color: var(--color-text);
+        background-color: var(--color-green-active);
+    }
+
+    &__input input {
+        padding: 0.25rem;
+        border-radius: 0.25rem;
+        border: 1px solid var(--color-border);
+
+        &:focus {
+            outline-offset: -2px;
+            outline: 2px solid var(--color-green);
+        }
     }
 }
 

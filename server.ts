@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises'
 import express from 'express'
 import dotenv from 'dotenv'
+import type { ViteDevServer } from 'vite'
 
 dotenv.config()
 
@@ -12,7 +13,7 @@ const base = process.env.BASE || '/'
 
 const templateHtml = isProduction ? await fs.readFile('./dist/client/index.html', 'utf-8') : ''
 
-let vite
+let vite: ViteDevServer
 
 if (!isProduction) {
     const { createServer } = await import('vite')
@@ -30,8 +31,8 @@ if (!isProduction) {
 app.use('*', async (req, res, next) => {
     const url = (req.originalUrl || req.url).replace(base, '')
 
-    let template
-    let render
+    let template: string
+    let render: (url: string) => Promise<{ html: string }>
     try {
         if (!isProduction) {
             template = await fs.readFile('./index.html', 'utf-8')
@@ -44,13 +45,11 @@ app.use('*', async (req, res, next) => {
         }
 
         const rendered = await render(url)
-        const html = template
-            .replace(`<!--app-head-->`, rendered.head ?? '')
-            .replace(`<!--app-html-->`, rendered.html ?? '')
+        const html = template.replace(`<!--app-html-->`, rendered.html ?? '')
 
         res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
     } catch (e) {
-        vite?.ssrFixStacktrace(e)
+        vite?.ssrFixStacktrace(e as Error)
         next(e)
     }
 })

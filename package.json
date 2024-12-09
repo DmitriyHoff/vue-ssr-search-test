@@ -8,7 +8,7 @@
         "build:client": "vite build --outDir dist/client",
         "build:server": "vite build --outDir dist/server --ssr src/entry-server.ts",
         "build": "npm run build:client && npm run build:server",
-        "preview": "cross-env NODE_ENV=production tsx server",
+        "preview": "npm run build && cross-env NODE_ENV=production tsx server",
         "build-only": "vite build",
         "type-check": "vue-tsc --build",
         "lint": "eslint . --fix",
@@ -25,7 +25,6 @@
         "nodemon": "^3.1.7",
         "pinia": "^2.2.6",
         "sirv": "^3.0.0",
-        "tsc": "^2.0.4",
         "tsx": "^4.19.2",
         "vue": "^3.5.13",
         "vue-router": "^4.4.5"

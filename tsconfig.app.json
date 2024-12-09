@@ -16,6 +16,7 @@
       "@/*": [
         "./src/*"
       ]
-    }
+    },
+    "noImplicitAny": false
   }
 }

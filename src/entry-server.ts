@@ -1,7 +1,7 @@
 import { renderToString } from 'vue/server-renderer'
 import { createApp } from './main'
 
-export async function render(url: string) {
+export async function render(url: string): Promise<{ html: string }> {
     const { app, router } = createApp()
 
     router.push(url)

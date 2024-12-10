@@ -38,12 +38,14 @@ enum OutputFormat {
 }
 
 onMounted(() => {
-    if (inputQuery.value) {
-        console.log('set value!')
-        inputQuery.value.value = queryString.value || ''
-    }
+    setInputValueFromStore()
 })
 
+function setInputValueFromStore() {
+    if (inputQuery.value) {
+        inputQuery.value.value = queryString.value || ''
+    }
+}
 /**
  * Выполняет поисковый запрос и возвращает полученные результаты
  * @param query Строка поискового запроса
@@ -63,21 +65,25 @@ async function onKeyUpHadler() {
     // который выполнит поисковый запрос
     timeout = setTimeout(async () => {
         const query = inputQuery.value?.value;
-        queryString.value = query
+
         if (query) {
             searchResults.value = await search(inputQuery.value?.value)
+            queryString.value = query
         }
     }, KEYUP_TIMEOUT)
 }
 
-
+function onBlurHandler() {
+    setInputValueFromStore()
+}
 </script>
 
 <template>
     <div class="search">
         <div class="search__input">
             <label for="query" class="search-box__label">Найти:</label>
-            <input ref="inputQuery" id="query" class="search-input__input" type="text" @keyup="onKeyUpHadler">
+            <input ref="inputQuery" id="query" class="search-input__input" type="text" @keyup="onKeyUpHadler"
+                @blur="onBlurHandler">
         </div>
 
         <ul class="search-results">

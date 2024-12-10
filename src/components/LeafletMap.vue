@@ -42,7 +42,7 @@ watch(selectedResult, (newValue) => {
     leafletModule.tileLayer(TILE_LAYER).addTo(mapObject);
     mapObject.flyToBounds(bounds, {
         animate: true,
-        duration: 1.2
+        duration: 1.5
     })
 })
 

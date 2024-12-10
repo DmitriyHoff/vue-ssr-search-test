@@ -5,9 +5,9 @@
     "type": "module",
     "scripts": {
         "dev": "tsx server",
-        "build:client": "vite build --outDir dist/client",
-        "build:server": "vite build --outDir dist/server --ssr src/entry-server.ts",
-        "build": "npm run build:client && npm run build:server",
+        "build:client": "cross-env BUILD_TARGET=client vite build",
+        "build:server": "cross-env BUILD_TARGET=server vite build",
+        "build": "npm run build:server && npm run build:client",
         "preview": "npm run build && cross-env NODE_ENV=production tsx server",
         "build-only": "vite build",
         "type-check": "vue-tsc --build",

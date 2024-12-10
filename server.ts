@@ -23,9 +23,8 @@ if (!isProduction) {
     })
     app.use(vite.middlewares)
 } else {
-    templateHtml = await fs.readFile('./dist/client/index.html', 'utf-8')
-    const sirv = (await import('sirv')).default
-    app.use(base, sirv('./dist/client', { extensions: [] }))
+    templateHtml = await fs.readFile('./client/index.html', 'utf-8')
+    app.use(express.static('./client'))
 }
 
 app.use('*', async (req: Request, res: Response, next) => {
@@ -38,8 +37,8 @@ app.use('*', async (req: Request, res: Response, next) => {
             templateHtml = await vite.transformIndexHtml(url, templateHtml)
             render = (await vite.ssrLoadModule('/src/entry-server.ts')).render
         } else {
-            const importURL = new URL('./dist/server/entry-server.js', import.meta.url)
-            render = (await import(importURL.toString())).render
+            const { render: _render } = await import('./src/entry-server')
+            render = _render
         }
 
         const rendered = await render(url)

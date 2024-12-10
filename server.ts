@@ -1,18 +1,17 @@
 import fs from 'node:fs/promises'
-import express from 'express'
+import express, { type Request, type Response, type Express } from 'express'
 import dotenv from 'dotenv'
 import type { ViteDevServer } from 'vite'
 
 dotenv.config()
 
-const isProduction = process.env.NODE_ENV === 'production'
+const isProduction: boolean = process.env.NODE_ENV === 'production'
 
-const app = express()
-const port = process.env.PORT || 5173
-const base = process.env.BASE || '/'
+const app: Express = express()
+const port: string = process.env.PORT || '5173'
+const base: string = process.env.BASE || '/'
 
-const templateHtml = isProduction ? await fs.readFile('./dist/client/index.html', 'utf-8') : ''
-
+let templateHtml: string
 let vite: ViteDevServer
 
 if (!isProduction) {
@@ -24,28 +23,27 @@ if (!isProduction) {
     })
     app.use(vite.middlewares)
 } else {
+    templateHtml = await fs.readFile('./dist/client/index.html', 'utf-8')
     const sirv = (await import('sirv')).default
     app.use(base, sirv('./dist/client', { extensions: [] }))
 }
 
-app.use('*', async (req, res, next) => {
+app.use('*', async (req: Request, res: Response, next) => {
     const url = (req.originalUrl || req.url).replace(base, '')
 
-    let template: string
     let render: (url: string) => Promise<{ html: string }>
     try {
         if (!isProduction) {
-            template = await fs.readFile('./index.html', 'utf-8')
-            template = await vite.transformIndexHtml(url, template)
-
+            templateHtml = await fs.readFile('./index.html', 'utf-8')
+            templateHtml = await vite.transformIndexHtml(url, templateHtml)
             render = (await vite.ssrLoadModule('/src/entry-server.ts')).render
         } else {
-            template = templateHtml
-            render = (await import('./dist/server/entry-server.js')).render
+            const importURL = new URL('./dist/server/entry-server.js', import.meta.url)
+            render = (await import(importURL.toString())).render
         }
 
         const rendered = await render(url)
-        const html = template.replace(`<!--app-html-->`, rendered.html ?? '')
+        const html = templateHtml.replace(`<!--app-html-->`, rendered.html ?? '')
 
         res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
     } catch (e) {

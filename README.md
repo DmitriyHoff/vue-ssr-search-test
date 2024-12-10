@@ -2,7 +2,9 @@
 
 Поиск локаций с использованием Nominatim API.
 
-![screenshot](https://github.com/DmitriyHoff/images/blob/23550be02f04c79c9ddefefe12933901a37836df/screenshot.png?raw=true)
+<div align="center">
+    <img alt="demo" src="image.gif" width="600" />
+</div>
 
 ## Краткое описание реализации
 

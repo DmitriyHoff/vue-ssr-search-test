@@ -1,8 +1,7 @@
 <script setup lang="ts">
-
 import axios, { type AxiosInstance } from 'axios';
 import SearchResult from './SearchResult.vue';
-import { useTemplateRef } from 'vue';
+import { useTemplateRef, onMounted } from 'vue';
 import { useSearchStore } from '@/stores/search';
 import { storeToRefs } from 'pinia';
 
@@ -13,7 +12,7 @@ const SEARCH_API_URL: string = import.meta.env.VITE_SEARCH_API_URL;
 const KEYUP_TIMEOUT = 200;
 
 const searchStore = useSearchStore()
-const { searchResults, selectedResult } = storeToRefs(searchStore)
+const { searchResults, selectedResult, queryString } = storeToRefs(searchStore)
 
 const instanceAxios: AxiosInstance = axios.create({
     baseURL: SEARCH_API_URL,
@@ -38,6 +37,13 @@ enum OutputFormat {
     GeoCodeJSON = 'geocodejson',
 }
 
+onMounted(() => {
+    if (inputQuery.value) {
+        console.log('set value!')
+        inputQuery.value.value = queryString.value || ''
+    }
+})
+
 /**
  * Выполняет поисковый запрос и возвращает полученные результаты
  * @param query Строка поискового запроса
@@ -57,6 +63,7 @@ async function onKeyUpHadler() {
     // который выполнит поисковый запрос
     timeout = setTimeout(async () => {
         const query = inputQuery.value?.value;
+        queryString.value = query
         if (query) {
             searchResults.value = await search(inputQuery.value?.value)
         }
@@ -115,6 +122,8 @@ async function onKeyUpHadler() {
     list-style: none;
     padding: 0;
     margin: 0;
+    max-height: 400px;
+    overflow-y: scroll;
 
     &__item {
         border-radius: 0.5rem;

@@ -35,7 +35,13 @@ npm run dev
 npm run build
 ```
 
-Структура готового проекта:
+### Сборка и запуск production-версии
+
+```sh
+npm run preview
+```
+
+#### Структура готового проекта:
 
 <div align="left">
     <img alt="demo" src="image2.png" />

@@ -34,3 +34,9 @@ npm run dev
 ```sh
 npm run build
 ```
+
+Структура готового проекта:
+
+<div align="left">
+    <img alt="demo" src="image2.png" />
+</div>

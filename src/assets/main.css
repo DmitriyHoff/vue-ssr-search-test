@@ -21,7 +21,30 @@ a,
 .capitalize-first::first-letter {
     text-transform: uppercase;
 }
+::-webkit-scrollbar {
+    width: 0.5rem;
+    height: 0.5rem;
+}
 
+/* Track */
+::-webkit-scrollbar-track {
+    /* box-shadow: inset 0 0 5px grey; */
+    border-radius: 0.25rem;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 5px rgb(var(--color-border));
+    background: var(--color-border-hover);
+    border-radius: 0.25rem;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    width: 0.5rem;
+    box-shadow: inset 0 0 5px var(--color-green-hover);
+    background: var(--color-green);
+}
 @media (hover: hover) {
     a:hover {
         background-color: hsla(160, 100%, 37%, 0.2);

@@ -1,47 +1,49 @@
 # vue-ssr-search-test
 
-Поиск локаций с использованием Nominatim API.
+[![en](https://img.shields.io/badge/lang-en-green.svg)](https://github.com/DmitriyHoff/vue-ssr-search-test/blob/master/README.md)
+[![ru](https://img.shields.io/badge/lang-ru-red.svg)](https://github.com/DmitriyHoff/vue-ssr-search-test/blob/main/README.ru.md)
+
+Search for locations using Nominatim API.
 
 <div align="center">
     <img alt="demo" src="image.gif" width="600" />
 </div>
 
-## Краткое описание реализации
+## Brief description of the implementation
 
-В данном проекте серверный рендеринг (**SSR**) реализован с использованием **Node** + **Express.js**, без сторонних библиотек.
+In this project, server-side rendering (**SSR**) is implemented using **Node** + **Express.js** , without third-party libraries.
 
-Для демонстрации корректной работы серверного рендеринга и процесса гидратации на клиентской стороне добавлено несколько страниц c помощью **Vue Router**.
+To demonstrate the correct operation of server rendering and the hydration process on the client side, several pages have been added using Vue Router .
 
-Для управления состоянием приложения используется **Pinia**
+**Pinia** is used to manage the application state.
 
-Для визуализации результатов поиска было решено подключить библиотеку **Leaflet**.
-Поскольку Leaflet функционирует исключительно в браузере, обеспечен динамический импорт данной библиотеки в хуке `onMounted()` Vue. Это решение гарантирует, что библиотека будет загружена только на клиентской стороне, избегая ошибок, связанных с отсутствием глобального объекта `window` на сервере.
+To visualize the search results, it was decided to include the **Leaflet** library. Since Leaflet functions exclusively in the browser, dynamic import of this library is provided in the `onMounted()` Vue hook. This solution ensures that the library is loaded only on the client side, avoiding errors related to the absence of a global object `window` on the server.
 
-## Подготовка проекта
+## Project preparation
 
 ```sh
 npm install
 ```
 
-### Запуск приложения в режиме Hot-Reload для разработки
+### Running an application in Hot-Reload mode for development
 
 ```sh
 npm run dev
 ```
 
-### Сборка готового решения
+### Assembling a ready-made solution
 
 ```sh
 npm run build
 ```
 
-### Сборка и запуск production-версии
+### Building and running the production version
 
 ```sh
 npm run preview
 ```
 
-#### Структура готового проекта:
+#### Structure of the finished project:
 
 <div align="left">
     <img alt="demo" src="image2.png" />
